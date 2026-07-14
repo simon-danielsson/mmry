@@ -33,9 +33,9 @@ int main(int argc, char **argv) {
         char date_buff[100];
         strftime(date_buff, sizeof(date_buff), "%Y-%m-%d", t);
         char *d = date_buff;
-        time()
+        // time()
 
-            printf("%d - %s [%s]\n", mf.items[i].id, mf.items[i].header, d);
+        printf("%d - %s [%s]\n", mf.items[i].id, mf.items[i].header, d);
         // printf("%s", mf.items[i].content);
     }
 

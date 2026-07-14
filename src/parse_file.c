@@ -67,14 +67,6 @@ void append_char_to_null_term_str(char *s, char c) {
     s[len + 1] = '\0';
 }
 
-time_t create_time_t(int year, int month, int day) {
-    struct tm t = {0};
-    t.tm_year = year - 1900; // Years since 1900
-    t.tm_mon = month - 1;    // Months since January (0-11)
-    t.tm_mday = day;         // Day of the month (1-31)
-    return mktime(&t);
-}
-
 void get_from_within_parens(char *dest, char *s) {
     bool collect = false;
     int dest_idx = 0;
@@ -139,6 +131,21 @@ char **str_split(char *a_str, const char a_delim) {
     return result;
 }
 
+// takes ISO date as c-string: "YYYY-MM-DD"
+time_t create_time_t_from_str(char *date_as_str) {
+    char **s = str_split(date_as_str, '-');
+
+    int year = atoi(s[0]);
+    int month = atoi(s[1]);
+    int day = atoi(s[2]);
+
+    struct tm t = {0};
+    t.tm_year = year - 1900; // years since 1900
+    t.tm_mon = month - 1;    // months since January (0-11)
+    t.tm_mday = day;         // day of the month (1-31)
+    return mktime(&t);
+}
+
 MmryFile parse_file(char *md_path) {
 
     // read -------------------------------------------------------------------
@@ -198,6 +205,7 @@ MmryFile parse_file(char *md_path) {
                     } else if (strstr(*(words + i), "date")) {
                         char result[256] = {0};
                         get_from_within_parens(result, *(words + i));
+                        mit.date = create_time_t_from_str(result);
 
                     } else if (strstr(*(words + i), "lead")) {
                         char result[256] = {0};
