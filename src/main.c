@@ -22,9 +22,7 @@ int main(int argc, char **argv) {
     }
     md_path[255] = '\0';
 
-    if (!BUILD_RELEASE) {
-        printf("File at path: %s\n", md_path);
-    }
+    printf("%s\n\n", md_path);
 
     MmryFile mf = parse_file(md_path);
 

@@ -9,6 +9,14 @@ bool within_lead_time(MmryItem *item) {
     return now >= start_showing; // true if lead_time reached or passed
 }
 
+// for event and todo items
+int days_until_due_or_overdue(MmryItem *item) {
+    time_t now = time(NULL);
+    time_t next_occ = item->date;
+    double diff_seconds = difftime(next_occ, now);
+    return abs((int)(diff_seconds / SEC_PER_DAY));
+}
+
 // returns -1 if not a repeatable item
 int days_until_next_repeat(MmryItem *item) {
     if (item->mit.t != REPEAT) {
@@ -46,7 +54,7 @@ void print_file(MmryFile *mf) {
 
     // column headers
     {
-        printf("%-7s%-31s%-21s%s\n", "ID:", "Title:", "Due date:", "Details:");
+        printf("%-9s%-31s%-21s%s\n", "Type:", "Title:", "Date:", "Due:");
         int count = 70;
         for (int i = 0; i < count; i++) {
             printf("┄");
@@ -66,26 +74,30 @@ void print_file(MmryFile *mf) {
             char icon[32] = {0};
             switch (mf->items[i].mit.t) {
                 case REPEAT:
-                    snprintf(icon, sizeof(icon), "");
+                    snprintf(icon, sizeof(icon), "REPEAT");
                     break;
                 case TODO:
-                    snprintf(icon, sizeof(icon), "");
+                    if (mf->items[i].mit.todo) {
+                        snprintf(icon, sizeof(icon), "TODO");
+                    } else {
+                        snprintf(icon, sizeof(icon), "DONE");
+                    }
                     break;
                 case EVENT:
-                    snprintf(icon, sizeof(icon), "");
+                    snprintf(icon, sizeof(icon), "EVENT");
                     break;
             }
             char buff[64] = {0};
-            snprintf(buff, sizeof(buff), "%-4s", icon);
+            snprintf(buff, sizeof(buff), "%-9s", icon);
             strncat(line_builder, buff, 64);
         }
 
         // id
-        {
-            char buff[64] = {0};
-            snprintf(buff, sizeof(buff), "%-4d ", mf->items[i].id);
-            strncat(line_builder, buff, 64);
-        }
+        // {
+        //     char buff[64] = {0};
+        //     snprintf(buff, sizeof(buff), "%-4d ", mf->items[i].id);
+        //     strncat(line_builder, buff, 64);
+        // }
 
         // header
         {
@@ -112,10 +124,13 @@ void print_file(MmryFile *mf) {
             if (mf->items[i].mit.t == TODO) {
                 if (mf->items[i].mit.todo) {
                     char buff[64] = {0};
-                    if (mf->items[i].date < (time_t)time(NULL)) {
-                        snprintf(buff, sizeof(buff), "TODO (late)");
+                    int due = days_until_due_or_overdue(&mf->items[i]);
+                    if (due == 0) {
+                        snprintf(buff, sizeof(buff), "Today!");
+                    } else if (mf->items[i].date < (time_t)time(NULL)) {
+                        snprintf(buff, sizeof(buff), "%dd overdue", due);
                     } else {
-                        snprintf(buff, sizeof(buff), "TODO");
+                        snprintf(buff, sizeof(buff), "%dd left", due);
                     }
                     strncat(line_builder, buff, 64);
                 } else {
@@ -124,11 +139,18 @@ void print_file(MmryFile *mf) {
             }
         }
 
-        // event sign
+        // event
         {
             if (mf->items[i].mit.t == EVENT) {
                 char buff[64] = {0};
-                snprintf(buff, sizeof(buff), "EVENT");
+                int due = days_until_due_or_overdue(&mf->items[i]);
+                if (due == 0) {
+                    snprintf(buff, sizeof(buff), "Today!");
+                } else if (mf->items[i].date < (time_t)time(NULL)) {
+                    snprintf(buff, sizeof(buff), "%dd overdue", due);
+                } else {
+                    snprintf(buff, sizeof(buff), "%dd left", due);
+                }
                 strncat(line_builder, buff, 64);
             }
         }
