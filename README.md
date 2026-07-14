@@ -37,12 +37,73 @@ that too!) - instead, it is designed to be added to your `.bashrc` (or similar) 
   
 Clone this repository and build from source using bundled `run.py` script.
   
+``` bash
+./run.py release
+```
+  
+An executable will have been generated inside `./build/release`.
+  
 ---
 <div id="usage"></div>
   
 ## Usage
    
-No usage section written yet.
+### Setup
+     
+You will feed the executable with a markdown file. Here is a bash function I've
+written to streamline this process (you will obviously have to change the paths
+to match the location of the executable/markdown-file on your machine):
+``` bash
+# ~/.bashrc (or ~/.bash_aliases etc.)
+
+mmry() { "$HOME/dev/c/mmry/build/release/"$(command ls -t "$HOME/dev/c/mmry/build/release/" | head -n 1) "~/dev/c/mmry/test.md"; }
+```
+  
+Then you could also launch this command at startup to stay up-to-date on all your
+reminders:
+``` bash
+# ~/.bashrc
+
+mmry
+```
+  
+### Syntax
+    
+**There are three different item types:**
+- event: a singular event
+- repeat: a repeating event
+- todo: an event with a true/false state
+  
+**The 'lead' variable**
+Each new item can take a 'lead' variable that dictates the amount of days before the
+items scheduled time it should start appearing in the 'mmry' list output. The
+'lead' variable can be omitted and will in that case default to 7 days.  
+  
+**The 'date' variable**
+The date variable is in an ISO "YYYY-MM-DD" format - specific times like hour,
+minutes, seconds, as well as time-zones, are not supported.  
+  
+**More about todo items**
+Todo items that are set to 'false' (i.e done) will not be printed to the list.  
+  
+### Examples
+    
+``` markdown
+# It's someone's birthday!
+{ repeat(365) date(1992-08-10) lead(30) }
+
+# Do the laundry
+{ repeat(7) date(2025-01-01) lead(3) }
+
+# Write a new blog post
+{ todo(false) date(2025-08-02) }
+
+# A cool concert
+{ event date(2027-02-06) lead(45) }
+
+# Write a new blog post
+{ todo(false) date(2025-08-02) }
+```
     
 ---
 <div id="screenshots"></div>
