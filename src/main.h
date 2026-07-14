@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 // semantics ------------------------------------------------------------------
 
@@ -60,6 +61,11 @@ typedef double f64;
 #endif
 
 // logging --------------------------------------------------------------------
+
+static void err(const char *msg) {
+  printf("Error: %s", msg);
+  exit(1);
+}
 
 #define LOG_STYLE "\x1b[1m"
 #define LOG_RESET "\x1b[0m"
