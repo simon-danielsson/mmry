@@ -69,22 +69,22 @@ mmry
   
 ### Syntax
     
-**There are three different item types:**
+**There are three different item types:**  
 - event: a singular event
 - repeat: a repeating event
 - todo: an event with a true/false state
   
-**The 'lead' variable**
-Each new item can take a 'lead' variable that dictates the amount of days before the
-items scheduled time it should start appearing in the 'mmry' list output. The
-'lead' variable can be omitted and will in that case default to 7 days.  
+**The 'lead' variable**  
+Each new item can take a 'lead' variable that dictates the amount of days before its
+scheduled time that it should start appearing in the 'mmry' list. The
+'lead' variable can be omitted and will in that case default to a lead-time of 7 days.  
   
-**The 'date' variable**
-The date variable is in an ISO "YYYY-MM-DD" format - specific times like hour,
-minutes, seconds, as well as time-zones, are not supported.  
+**The 'date' variable**  
+The date variable must follow the "YYYY-MM-DD" format - specific times such as
+the hour, minutes, seconds, as well as time-zones, are not supported.  
   
-**More about todo items**
-Todo items that are set to 'false' (i.e done) will not be printed to the list.  
+**More about todo items**  
+Todo items that are set to 'false' (i.e done) will not be printed to the 'mmry' list.  
   
 ### Examples
     
@@ -93,12 +93,12 @@ Todo items that are set to 'false' (i.e done) will not be printed to the list.
 { repeat(365) date(1992-08-10) lead(30) }
 
 # Do the laundry
-{ repeat(7) date(2025-01-01) lead(3) }
+{ repeat(14) date(2025-01-01) lead(4) }
 
-# Write a new blog post
-{ todo(false) date(2025-08-02) }
+# Buy groceries
+{ todo(true) date(2025-07-02) }
 
-# A cool concert
+# A rock concert
 { event date(2027-02-06) lead(45) }
 
 # Write a new blog post
