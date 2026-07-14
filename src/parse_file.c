@@ -83,7 +83,7 @@ void get_from_within_parens(char *dest, char *s) {
         }
     }
     dest[dest_idx] = '\0';
-    printf("Extracted: %s\n", dest);
+    // printf("Extracted: %s\n", dest);
 }
 
 // source:
@@ -159,7 +159,8 @@ MmryFile parse_file(char *md_path) {
 
     char buffer[512];
     char content[512] = {0};
-    int line, id_counter = 0;
+    int line = 0;
+    int id_counter = 0;
     MmryItem mit = {0};
     MmryFile mf = {0};
     while (fgets(buffer, sizeof(buffer), file) != NULL) {

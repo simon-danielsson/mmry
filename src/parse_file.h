@@ -1,3 +1,5 @@
+#ifndef PARSE_FILE_H
+#define PARSE_FILE_H
 #include "main.h"
 
 typedef enum { REPEAT, TODO, EVENT } MmryItemTypeEnum;
@@ -28,3 +30,5 @@ typedef struct {
 MmryFile parse_file(char *md_path);
 
 void MmryFile_free(MmryFile *file);
+
+#endif // PARSE_FILE_H

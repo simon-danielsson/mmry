@@ -17,6 +17,7 @@
 
 // standard libraries ---------------------------------------------------------
 
+#include <ctype.h>
 #include <libc.h>
 #include <stdarg.h>
 #include <stdbool.h>

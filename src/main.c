@@ -1,5 +1,6 @@
 #include "main.h"
 #include "parse_file.h"
+#include "print_file.h"
 #include "utils.h"
 #include <time.h>
 
@@ -27,17 +28,7 @@ int main(int argc, char **argv) {
 
     MmryFile mf = parse_file(md_path);
 
-    printf("------\n");
-    for (size_t i = 0; i < mf.count; i++) {
-        struct tm *t = localtime(&mf.items[i].date);
-        char date_buff[100];
-        strftime(date_buff, sizeof(date_buff), "%Y-%m-%d", t);
-        char *d = date_buff;
-        // time()
-
-        printf("%d - %s [%s]\n", mf.items[i].id, mf.items[i].header, d);
-        // printf("%s", mf.items[i].content);
-    }
+    print_file(&mf);
 
     MmryFile_free(&mf);
 
