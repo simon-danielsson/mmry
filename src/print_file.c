@@ -3,11 +3,6 @@
 #include <time.h>
 
 #define SEC_PER_DAY 86400
-bool within_lead_time(MmryItem *item) {
-    time_t now = time(NULL);
-    time_t start_showing = item->date - (item->lead_time * SEC_PER_DAY);
-    return now >= start_showing; // true if lead_time reached or passed
-}
 
 // for event and todo items
 int days_until_due_or_overdue(MmryItem *item) {
@@ -28,7 +23,27 @@ int days_until_next_repeat(MmryItem *item) {
         next_occ += (item->mit.repeat * SEC_PER_DAY);
     }
     double diff_seconds = difftime(next_occ, now);
-    return (int)(diff_seconds / SEC_PER_DAY);
+    return (int)((diff_seconds / SEC_PER_DAY));
+}
+
+time_t next_repeat(MmryItem *item) {
+    time_t now = time(NULL);
+    time_t next_occ = item->date;
+    while (next_occ < now) {
+        next_occ += (item->mit.repeat * SEC_PER_DAY);
+    }
+    return next_occ;
+}
+
+bool within_lead_time(MmryItem *item) {
+    time_t now = time(NULL);
+    if (item->mit.t == REPEAT) {
+        time_t start_showing = next_repeat(item) - (item->lead_time * SEC_PER_DAY);
+        return now >= start_showing;
+    } else {
+        time_t start_showing = item->date - (item->lead_time * SEC_PER_DAY);
+        return now >= start_showing; // true if lead_time reached or passed
+    }
 }
 
 void trim_str(char *str) {
@@ -63,6 +78,7 @@ void print_file(MmryFile *mf) {
     }
 
     for (size_t i = 0; i < mf->count; i++) {
+
         if (!within_lead_time(&mf->items[i])) {
             continue;
         }
