@@ -27,7 +27,7 @@ void MmryItem_init(MmryItem *item, char *header, int id) {
     item->header = strdup(header);
     item->id = id;
     item->date = time(NULL);
-    item->content = strdup("");
+    item->content = (char *)malloc(sizeof(char) * 1024);
     item->lead_time = 7;
 }
 
@@ -157,8 +157,8 @@ MmryFile parse_file(char *md_path) {
 
     // parse ------------------------------------------------------------------
 
-    char buffer[512];
-    char content[512] = {0};
+    char buffer[1024];
+    char content[1024] = {0};
     int line = 0;
     int id_counter = 0;
     MmryItem mit = {0};
@@ -224,7 +224,10 @@ MmryFile parse_file(char *md_path) {
             if (buffer[0] == '\0' || buffer[0] == '\n') {
                 continue;
             }
+            // TODO: will need to improve this. perhaps add some realloc action
+            memset(content, 0, sizeof(content));
             strcat(content, buffer);
+            content[1023] = '\0';
             free(mit.content);
             mit.content = strdup(content);
         }
