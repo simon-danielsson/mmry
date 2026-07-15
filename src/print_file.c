@@ -138,17 +138,17 @@ void print_file(MmryFile *mf) {
             char type[32] = {0};
             switch (mf->items[i].mit.t) {
                 case REPEAT:
-                    snprintf(type, sizeof(type), "REPEAT");
+                    snprintf(type, sizeof(type), "Repeat");
                     break;
                 case TODO:
                     if (mf->items[i].mit.todo) {
-                        snprintf(type, sizeof(type), "TODO");
+                        snprintf(type, sizeof(type), "Todo");
                     } else {
-                        snprintf(type, sizeof(type), "DONE");
+                        snprintf(type, sizeof(type), "Done");
                     }
                     break;
                 case EVENT:
-                    snprintf(type, sizeof(type), "EVENT");
+                    snprintf(type, sizeof(type), "Event");
                     break;
             }
             append_column(line_builder, sizeof(line_builder), type, 8);
