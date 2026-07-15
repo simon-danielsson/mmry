@@ -25,7 +25,12 @@ int main(int argc, char **argv) {
     // print program info
     {
         printf("%s %s (%s)\n", ENV_NAME, ENV_GITTAG, ENV_REPO);
-        printf("File: %s\n\n", md_path);
+        printf("File: %s\n", md_path);
+        time_t now = time(NULL);
+        struct tm *t = localtime(&now);
+        char temp[100] = {0};
+        strftime(temp, sizeof(temp), "%A %h %d %Y, Week %W", t);
+        printf("Today: %s\n\n", temp);
     }
 
     MmryFile mf = parse_file(md_path);
