@@ -144,7 +144,7 @@ void print_file(MmryFile *mf) {
                     if (due == 0) {
                         snprintf(buff, sizeof(buff), "Today!");
                     } else if (mf->items[i].date < (time_t)time(NULL)) {
-                        snprintf(buff, sizeof(buff), "%dd overdue", due);
+                        snprintf(buff, sizeof(buff), "%dd ago", due);
                     } else {
                         snprintf(buff, sizeof(buff), "%dd left", due);
                     }
@@ -163,7 +163,7 @@ void print_file(MmryFile *mf) {
                 if (due == 0) {
                     snprintf(buff, sizeof(buff), "Today!");
                 } else if (mf->items[i].date < (time_t)time(NULL)) {
-                    snprintf(buff, sizeof(buff), "%dd overdue", due);
+                    continue;
                 } else {
                     snprintf(buff, sizeof(buff), "%dd left", due);
                 }

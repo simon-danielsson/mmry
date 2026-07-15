@@ -77,8 +77,9 @@ scheduled time it should start appearing in the 'mmry' list. The
 The date variable must follow the "YYYY-MM-DD" format - specific times such as
 the hour, minutes, seconds, as well as time-zones, are not supported.  
   
-**More about todo items**  
-Todo items set to 'false' (i.e done) will be omitted from the list.
+**Omissions**  
+Todo items set to 'false' (i.e done) are omitted from the list.
+Events that have passed their scheduled dates are omitted from the list.
   
 ### Examples
     
