@@ -7,7 +7,7 @@ typedef enum { REPEAT, TODO, EVENT } MmryItemTypeEnum;
 typedef struct {
   MmryItemTypeEnum t;
   union {
-    u32 repeat;
+    int repeat;
     bool todo;
   };
 } MmryItemType;
