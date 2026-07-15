@@ -13,7 +13,7 @@ PROJ_NAME = ROOT.name  # env var
 PROJ_REPO = f"https://github.com/simon-danielsson/{PROJ_NAME}"  # env var
 AUTH = "Simon Danielsson"  # env var
 AUTH_CONT = "contact@simondanielsson.se"  # env var
-C_STD = "gnu23"  # c standard used to compile program
+C_STD = "c99"  # c standard used to compile program
 
 AUTO_RUN = True  # if true, run binary after compile
 # AUTO_RUN_ARGS = ["~/dev/c/mmry/test.md"]  # program args used at auto run
