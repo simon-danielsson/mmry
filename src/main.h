@@ -19,6 +19,7 @@
 
 #include <ctype.h>
 #include <libc.h>
+#include <locale.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -26,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <wchar.h>
 
 // semantics ------------------------------------------------------------------
 

@@ -64,19 +64,60 @@ void trim_str(char *str) {
     str[len] = '\0';
 }
 
+// accounting for utf-8 widths
+size_t append_column(char *dst, size_t dstsize, const char *text, int width) {
+    size_t used = strlen(dst);
+
+    if (used >= dstsize)
+        return used;
+
+    int n = snprintf(dst + used, dstsize - used, "%s", text);
+    if (n < 0)
+        return used;
+
+    used += (size_t)n;
+
+    mbstate_t st = {0};
+    const char *p = text;
+    size_t wlen = mbsrtowcs(NULL, &p, 0, &st);
+
+    int cols = 0;
+    if (wlen != (size_t)-1) {
+        wchar_t wbuf[wlen + 1];
+
+        st = (mbstate_t){0};
+        p = text;
+        mbsrtowcs(wbuf, &p, wlen + 1, &st);
+
+        cols = wcswidth(wbuf, wlen);
+        if (cols < 0)
+            cols = (int)strlen(text);
+    }
+
+    while (cols++ < width && used + 1 < dstsize)
+        dst[used++] = ' ';
+
+    if (used + 1 < dstsize)
+        dst[used++] = ' ';
+
+    dst[used] = '\0';
+
+    return used;
+}
+
 // builder
 void print_file(MmryFile *mf) {
+    setlocale(LC_ALL, "");
 
     // column headers
     {
-        printf("%-9s%-31s%-21s%s\n", "Type:", "Title:", "Date:", "Due:");
-        int count = 70;
+        printf("%-9s%-33s%-21s%s\n", "Type:", "Title:", "Date:", "Due:");
+        int count = 74;
         for (int i = 0; i < count; i++) {
             printf("┄");
         }
         putchar('\n');
     }
-
     for (size_t i = 0; i < mf->count; i++) {
 
         if (!within_lead_time(&mf->items[i])) {
@@ -85,42 +126,32 @@ void print_file(MmryFile *mf) {
 
         char line_builder[256] = {0};
 
-        // icon
+        // type
         {
-            char icon[32] = {0};
+            char type[32] = {0};
             switch (mf->items[i].mit.t) {
                 case REPEAT:
-                    snprintf(icon, sizeof(icon), "REPEAT");
+                    snprintf(type, sizeof(type), "REPEAT");
                     break;
                 case TODO:
                     if (mf->items[i].mit.todo) {
-                        snprintf(icon, sizeof(icon), "TODO");
+                        snprintf(type, sizeof(type), "TODO");
                     } else {
-                        snprintf(icon, sizeof(icon), "DONE");
+                        snprintf(type, sizeof(type), "DONE");
                     }
                     break;
                 case EVENT:
-                    snprintf(icon, sizeof(icon), "EVENT");
+                    snprintf(type, sizeof(type), "EVENT");
                     break;
             }
-            char buff[64] = {0};
-            snprintf(buff, sizeof(buff), "%-9s", icon);
-            strncat(line_builder, buff, 64);
+            append_column(line_builder, sizeof(line_builder), type, 8);
         }
-
-        // id
-        // {
-        //     char buff[64] = {0};
-        //     snprintf(buff, sizeof(buff), "%-4d ", mf->items[i].id);
-        //     strncat(line_builder, buff, 64);
-        // }
 
         // header
         {
             trim_str(mf->items[i].header);
-            char buff[64] = {0};
-            snprintf(buff, sizeof(buff), "%-30s ", mf->items[i].header);
-            strncat(line_builder, buff, 64);
+            append_column(line_builder, sizeof(line_builder), mf->items[i].header,
+                    32);
         }
 
         // date
@@ -130,9 +161,7 @@ void print_file(MmryFile *mf) {
             strftime(date_buff, sizeof(date_buff), "%a %Y-%m-%d", t);
             char *d = date_buff;
 
-            char buff[64] = {0};
-            snprintf(buff, sizeof(buff), "%-20s ", d);
-            strncat(line_builder, buff, 64);
+            append_column(line_builder, sizeof(line_builder), d, 20);
         }
 
         // todo status (done items aren't printed)
@@ -148,7 +177,7 @@ void print_file(MmryFile *mf) {
                     } else {
                         snprintf(buff, sizeof(buff), "%dd left", due);
                     }
-                    strncat(line_builder, buff, 64);
+                    append_column(line_builder, sizeof(line_builder), buff, 20);
                 } else {
                     continue;
                 }
@@ -167,7 +196,7 @@ void print_file(MmryFile *mf) {
                 } else {
                     snprintf(buff, sizeof(buff), "%dd left", due);
                 }
-                strncat(line_builder, buff, 64);
+                append_column(line_builder, sizeof(line_builder), buff, 15);
             }
         }
 
@@ -177,11 +206,10 @@ void print_file(MmryFile *mf) {
             if (next_occur != -1) {
                 char buff[64] = {0};
                 snprintf(buff, sizeof(buff), "%dd left", next_occur);
-                strncat(line_builder, buff, 64);
-                // }
-        }
+                append_column(line_builder, sizeof(line_builder), buff, 15);
+            }
 
-        printf("%s\n", line_builder);
+            puts(line_builder);
+        }
     }
-}
 }
