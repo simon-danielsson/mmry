@@ -164,6 +164,10 @@ MmryFile parse_file(char *md_path) {
     MmryItem mit = {0};
     MmryFile mf = {0};
     while (fgets(buffer, sizeof(buffer), file) != NULL) {
+        // skip html style comments
+        if (strstr(buffer, "<!--")) {
+            continue;
+        }
         if (buffer[0] == '#') {
             // push if not null
             if (mit.header != NULL && mit.header[0] != '\0') {
