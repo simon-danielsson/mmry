@@ -20,6 +20,7 @@
 #include <ctype.h>
 #include <libc.h>
 #include <locale.h>
+#include <math.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdint.h>

@@ -1,6 +1,4 @@
 #include "parse_file.h"
-#include <stdio.h>
-#include <time.h>
 
 #define SEC_PER_DAY 86400
 
@@ -8,8 +6,8 @@
 int days_until_due_or_overdue(MmryItem *item) {
     time_t now = time(NULL);
     time_t next_occ = item->date;
-    double diff_seconds = difftime(next_occ, now);
-    return abs((int)(diff_seconds / SEC_PER_DAY));
+    double diff_days = difftime(next_occ, now) / SEC_PER_DAY;
+    return (int)floor(diff_days + 1);
 }
 
 // returns -1 if not a repeatable item
@@ -175,39 +173,25 @@ void print_file(MmryFile *mf) {
             append_column(line_builder, sizeof(line_builder), d, 20);
         }
 
-        // todo status (done items aren't printed)
+        // todo and event due status
         {
-            if (mf->items[i].mit.t == TODO) {
-                if (mf->items[i].mit.todo) {
-                    char buff[64] = {0};
-                    int due = days_until_due_or_overdue(&mf->items[i]);
-                    if (due == 0) {
-                        snprintf(buff, sizeof(buff), "Today!");
-                    } else if (mf->items[i].date < (time_t)time(NULL)) {
-                        snprintf(buff, sizeof(buff), "%dd ago", due);
-                    } else {
-                        snprintf(buff, sizeof(buff), "%dd left", due);
-                    }
-                    append_column(line_builder, sizeof(line_builder), buff, 20);
-                } else {
-                    continue;
-                }
-            }
-        }
-
-        // event
-        {
-            if (mf->items[i].mit.t == EVENT) {
+            if (mf->items[i].mit.t == TODO || EVENT) {
+                time_t now = time(NULL);
                 char buff[64] = {0};
                 int due = days_until_due_or_overdue(&mf->items[i]);
-                if (due == 0) {
-                    snprintf(buff, sizeof(buff), "Today!");
-                } else if (mf->items[i].date < (time_t)time(NULL)) {
-                    continue;
-                } else {
+                if (due == 1 && (mf->items[i].date > now)) {
+                    snprintf(buff, sizeof(buff), "Tomorrow");
+                } else if (due == 0 && (mf->items[i].date < now)) {
+                    snprintf(buff, sizeof(buff), "Today");
+                } else if (due == -1) {
+                    snprintf(buff, sizeof(buff), "Yesterday");
+                } else if (mf->items[i].date < now) {
+                    snprintf(buff, sizeof(buff), "%dd ago", abs(due));
+                } else if (mf->items[i].date > now) {
                     snprintf(buff, sizeof(buff), "%dd left", due);
+                } else {
                 }
-                append_column(line_builder, sizeof(line_builder), buff, 15);
+                append_column(line_builder, sizeof(line_builder), buff, 20);
             }
         }
 
