@@ -109,15 +109,22 @@ size_t append_column(char *dst, size_t dstsize, const char *text, int width) {
 void print_file(MmryFile *mf) {
     setlocale(LC_ALL, "");
 
+    char print_buffer[4000] = "";
+    int active_items_counter = 0;
+
     // column headers
     {
-        printf("%-9s%-33s%-21s%s\n", "Type:", "Title:", "Date:", "Due:");
         int count = 74;
+        char div[256] = {0};
         for (int i = 0; i < count; i++) {
-            printf("┄");
+            strcat(div, "┄");
         }
-        putchar('\n');
+        char buff[512] = {0};
+        snprintf(buff, sizeof(buff), "%-9s%-33s%-21s%s\n%s\n",
+                "Type:", "Title:", "Date:", "Due:", div);
+        strcat(print_buffer, buff);
     }
+
     for (size_t i = 0; i < mf->count; i++) {
 
         if (!within_lead_time(&mf->items[i])) {
@@ -208,8 +215,19 @@ void print_file(MmryFile *mf) {
                 snprintf(buff, sizeof(buff), "%dd left", next_occur);
                 append_column(line_builder, sizeof(line_builder), buff, 15);
             }
-
-            puts(line_builder);
         }
+
+        if (line_builder[0] != '\0') {
+            active_items_counter++;
+            strcat(print_buffer, line_builder);
+            strcat(print_buffer, "\n");
+        }
+    }
+
+    if (active_items_counter != 0) {
+        print_buffer[3999] = '\0';
+        puts(print_buffer);
+    } else {
+        printf("There's nothing to remember today!\n");
     }
 }
