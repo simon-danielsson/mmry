@@ -120,8 +120,8 @@ void print_file(MmryFile *mf) {
             strcat(div, "┄");
         }
         char buff[512] = {0};
-        snprintf(buff, sizeof(buff), "%-9s%-33s%-21s%s\n%s\n",
-                "Type:", "Title:", "Date:", "Due:", div);
+        snprintf(buff, sizeof(buff), "%-9s%-33s%-21s%s\n%s\n", "Type", "Title",
+                "Scheduled", "Due", div);
         strcat(print_buffer, buff);
     }
 
