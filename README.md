@@ -50,21 +50,15 @@ An executable will have been generated inside `./build/release`.
    
 ### Setup
      
-You will feed the executable with a markdown file. Here is a bash function I've
-written to streamline this process (you will obviously have to change the paths
-to match the location of the executable/markdown-file on your machine):
+You will feed the executable with a markdown file. Here is a bash alias that
+streamlines this (you will obviously have to change the paths to match the location of the executable/markdown-file on your machine). Then you can execute this alias at startup to stay up-to-date on all your reminders! I have added a check for the `$NVIM` variable so that 'mmry' doesn't run when I open the terminal within neovim.
 ``` bash
 # ~/.bashrc (or ~/.bash_aliases etc.)
 
-mmry() { "$HOME/dev/c/mmry/build/release/"$(command ls -t "$HOME/dev/c/mmry/build/release/" | head -n 1) "~/dev/c/mmry/test.md"; }
-```
-  
-Then you could also launch this command at startup to stay up-to-date on all your
-reminders:
-``` bash
-# ~/.bashrc
-
-mmry
+alias mmry="~/dev/c/mmry/build/install/* ~/notes/.mmry.md"
+if [[ -z "$NVIM" ]]; then
+    mmry
+fi
 ```
   
 ### Syntax
@@ -75,8 +69,8 @@ mmry
 - todo: an event with a true/false state
   
 **The 'lead' variable**  
-Each new item can take a 'lead' variable that dictates the amount of days before its
-scheduled time that it should start appearing in the 'mmry' list. The
+Each item can take a 'lead' variable that dictates how many days before its
+scheduled time it should start appearing in the 'mmry' list. The
 'lead' variable can be omitted and will in that case default to a lead-time of 7 days.  
   
 **The 'date' variable**  
@@ -84,7 +78,7 @@ The date variable must follow the "YYYY-MM-DD" format - specific times such as
 the hour, minutes, seconds, as well as time-zones, are not supported.  
   
 **More about todo items**  
-Todo items that are set to 'false' (i.e done) will not be printed to the 'mmry' list.  
+Todo items set to 'false' (i.e done) will be omitted from the list.
   
 ### Examples
     
