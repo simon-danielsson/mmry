@@ -35,7 +35,7 @@ that too!) - instead, it is designed to be added to your `.bashrc` (or similar) 
 
 ## Install
   
-Clone this repository and build from source using bundled `run.py` script.
+Clone this repository and build from source using the bundled `run.py` script.
   
 ``` bash
 ./run.py release
