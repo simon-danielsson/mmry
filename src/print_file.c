@@ -114,11 +114,15 @@ void print_file(MmryFile *mf) {
 
     // column headers
     {
-        int count = 74;
-        char div[256] = {0};
-        for (int i = 0; i < count; i++) {
-            strcat(div, "┄");
-        }
+        char *div = ({
+                int count = 74;
+                static char div[256] = {0};
+                for (int i = 0; i < count; i++) {
+                strcat(div, "┄");
+                }
+                div;
+                });
+
         char buff[512] = {0};
         snprintf(buff, sizeof(buff), "%-9s%-33s%-21s%s\n%s\n", "Type", "Title",
                 "Scheduled", "Due", div);
@@ -144,7 +148,7 @@ void print_file(MmryFile *mf) {
                     if (mf->items[i].mit.todo) {
                         snprintf(type, sizeof(type), "Todo");
                     } else {
-                        snprintf(type, sizeof(type), "Done");
+                        continue;
                     }
                     break;
                 case EVENT:

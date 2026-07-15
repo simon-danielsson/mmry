@@ -139,11 +139,13 @@ time_t create_time_t_from_str(char *date_as_str) {
     int month = atoi(s[1]);
     int day = atoi(s[2]);
 
-    struct tm t = {0};
-    t.tm_year = year - 1900; // years since 1900
-    t.tm_mon = month - 1;    // months since January (0-11)
-    t.tm_mday = day;         // day of the month (1-31)
-    return mktime(&t);
+    return ({
+            struct tm t = {0};
+            t.tm_year = year - 1900; // years since 1900
+            t.tm_mon = month - 1;    // months since January (0-11)
+            t.tm_mday = day;         // day of the month (1-31)
+            mktime(&t);
+            });
 }
 
 MmryFile parse_file(char *md_path) {
