@@ -22,7 +22,11 @@ int main(int argc, char **argv) {
     }
     md_path[255] = '\0';
 
-    printf("%s\n\n", md_path);
+    // print program info
+    {
+        printf("%s %s (%s)\n", ENV_NAME, ENV_GITTAG, ENV_REPO);
+        printf("File: %s\n\n", md_path);
+    }
 
     MmryFile mf = parse_file(md_path);
 
