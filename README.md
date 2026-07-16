@@ -105,7 +105,7 @@ Events that have passed their scheduled dates are omitted from the list.
   
 ## Screenshots
    
-No screenshots added yet.
+![screenshot](./media/screenshot.png)
     
 ---
 <div id="license"></div>
