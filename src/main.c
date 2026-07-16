@@ -2,7 +2,7 @@
 #include "parse_file.h"
 #include "print_file.h"
 #include "utils.h"
-#include <time.h>
+#include <stdio.h>
 
 int main(int argc, char **argv) {
     if (argc < 2) {
@@ -20,6 +20,7 @@ int main(int argc, char **argv) {
     } else {
         strcpy(md_path, argv[1]);
     }
+
     md_path[255] = '\0';
 
     // print program info

@@ -16,7 +16,6 @@ AUTH_CONT = "contact@simondanielsson.se"  # env var
 C_STD = "c99"  # c standard used to compile program
 
 AUTO_RUN = True  # if true, run binary after compile
-# AUTO_RUN_ARGS = ["~/dev/c/mmry/test.md"]  # program args used at auto run
 AUTO_RUN_ARGS = ["~/notes/.mmry.md"]  # program args used at auto run
 PRINT_COMPILE_DETAILS = True  # build-type, compiler, compile time
 

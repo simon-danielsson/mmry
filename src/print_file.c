@@ -209,6 +209,31 @@ void print_file(MmryFile *mf) {
             active_items_counter++;
             strcat(print_buffer, line_builder);
             strcat(print_buffer, "\n");
+            if (mf->items[i].content[0] != '\0') {
+                // split content field by newline and add incrementally, this is
+                // needed to give the content the correct indent when printing
+
+                strcat(print_buffer, "         ┊ \n");
+                const char s[4] = "\n";
+                char *tok;
+                tok = strtok(mf->items[i].content, s);
+                int content_lines = 1;
+                while (tok != 0) {
+                    char tmp[1024] = {0};
+                    if (content_lines == 5) {
+                        snprintf(tmp, sizeof(tmp), "         ┊ %s\n", "…");
+                    } else {
+                        snprintf(tmp, sizeof(tmp), "         ┊ %s\n", tok);
+                    }
+                    strcat(print_buffer, tmp);
+                    tok = strtok(0, s);
+                    if (content_lines == 5) {
+                        break;
+                    }
+                    content_lines++;
+                }
+            }
+            strcat(print_buffer, "\n");
         }
     }
 

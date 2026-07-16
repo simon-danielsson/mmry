@@ -1,6 +1,7 @@
 #include "main.h"
 #include <assert.h>
 #include <stdio.h>
+#include <string.h>
 
 typedef enum { REPEAT, TODO, EVENT } MmryItemTypeEnum;
 
@@ -27,7 +28,7 @@ void MmryItem_init(MmryItem *item, char *header, int id) {
     item->header = strdup(header);
     item->id = id;
     item->date = time(NULL);
-    item->content = (char *)malloc(sizeof(char) * 1024);
+    item->content = calloc(4048, sizeof(char));
     item->lead_time = 7;
 }
 
@@ -233,9 +234,7 @@ MmryFile parse_file(char *md_path) {
             // TODO: will need to improve this. perhaps add some realloc action
             memset(content, 0, sizeof(content));
             strcat(content, buffer);
-            content[1023] = '\0';
-            free(mit.content);
-            mit.content = strdup(content);
+            strcat(mit.content, content);
         }
         line++;
     }
