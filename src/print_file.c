@@ -175,7 +175,7 @@ void print_file(MmryFile *mf) {
 
         // todo and event due status
         {
-            if (mf->items[i].mit.t == TODO || EVENT) {
+            if (mf->items[i].mit.t != REPEAT) {
                 time_t now = time(NULL);
                 char buff[64] = {0};
                 int due = days_until_due_or_overdue(&mf->items[i]);
