@@ -78,8 +78,9 @@ The date variable must follow the "YYYY-MM-DD" format - specific times such as
 the hour, minutes, seconds, as well as time-zones, are not supported.  
   
 **Omissions**  
-Todo items set to 'false' (i.e done) are omitted from the list.
-Events that have passed their scheduled dates are omitted from the list.
+- Todo items set to 'false' (i.e done) are omitted from the list.  
+- Events that have passed their scheduled dates are omitted from the list.
+- Item content/bodies longer than 5 lines are omitted from the list.
   
 ### Examples
     
@@ -90,11 +91,20 @@ Events that have passed their scheduled dates are omitted from the list.
 # Do the laundry
 { repeat(14) date(2025-01-01) lead(4) }
 
+Blacks and other darks are already done.
+Just the white to go.
+
 # Buy groceries
 { todo(true) date(2025-07-02) }
 
+- Milk
+- Bread
+- Snus
+
 # A rock concert
 { event date(2027-02-06) lead(45) }
+
+This concert will be out of town.
 
 # Write a new blog post
 { todo(false) date(2025-08-02) }
